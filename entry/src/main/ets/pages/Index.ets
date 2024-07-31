@@ -1,159 +1,159 @@
+import {Feedback} from './StarEvaluation' //引入5星评价组件
+import {CustomDialogUser} from './CustomDialog' //引入弹窗组件
 
-//任务类
-@Observed
-class Task{
-  static id: number = 1
-  //任务名称
-  name: string = `任务${Task.id++}`
-  //任务状态：是否完成
-  finished: boolean = false
-}
 
-//统一的卡片样式
-@Styles function  card() {
-  .width('95%')
-  .padding(20)
-  .backgroundColor(Color.White)
-  .borderRadius(15)
-  .shadow({radius: 6, color: '#1F000000', offsetX: 2, offsetY: 4})
-}
-
-//任务完成样式
-@Extend(Text) function finishedTask() {
-  .decoration({type:TextDecorationType.LineThrough})
-  .fontColor('#B1B2B3')
+//提问问题和问题答案的样式,例如“您的毕业时间”的样式，“2021-1-1”的样式
+@Extend(Text) function textStyle(){
+  .fontColor(Color.Orange)
   .fontSize(20)
 }
+//填写问题答案的样式，例如图中填写毕业时间和滑动条的区域
+@Styles function questionStyle(){
+  .width('100%')
+  .backgroundColor('#fff6ce67')
+}
+//提问问题区域样式
+@Extend(Row) function questionAreaStyle(){
+  .width('100%')
+  .margin({top:15, bottom: 15})
+  .padding({top: 10, bottom: 10})
+  .justifyContent(FlexAlign.SpaceBetween)
+}
 
 
-
-
+//入口组件
 @Entry
 @Component
-struct  ProPage{
-  //总任务数量
-  @State totalTask: number = 0
-  //已完成任务数量
-  @State finishTask: number = 0
-  //任务数组
-  @State tasks: Task[] = []
+struct WorkPage {
+  @State year: number = 2024
+  @State month: number = 1
+  @State day: number = 1
+  @State salary: number = 5000
+  // @State evaluate: number = 0
+  @State totalScore: number = 6//总评分
 
-
-  handleTaskChange(){
-    //1. 更新任务总数量
-    this.totalTask = this.tasks.length
-    //2.更新已完成任务数量
-    this.finishTask = this.tasks.filter(item => item.finished).length
-  }
-
-
-  build() {
-    Column({space: 10}) {
-      //1.任务进度卡片
-      // Row(){
-      //   Back()
-      // }
+  build(){
+    Column() {
+      // 1. 标题 -- 毕业生满意度调查表
       Row(){
-        Text('任务进度:')
-          .fontSize(30)
+        Text('毕业生满意度调查表')
+          .fontSize(20)
           .fontWeight(FontWeight.Bold)
-        Stack(){
-          Progress({
-            value: this.finishTask,
-            total: this.totalTask,
-            type: ProgressType.Ring
-          })
-            .width(100)
-          Row(){
-            Text(`${this.finishTask}`)
-              .fontSize(24)
-              .fontColor('#36D')
-            Text(' / ' + this.totalTask.toString())
-              .fontSize(24)
-          }
-        }
-
-      }
-      .card()
-      .margin({top: 20, bottom: 10})
-      .justifyContent(FlexAlign.SpaceEvenly)
-
-
-      //2.新增任务按钮
-      Button(`新增任务`)
-        .width(200)
-        .onClick(() => {
-          //任务数组变化
-          this.tasks.push(new Task())
-          //任务总量变化
-          this.handleTaskChange()
-        })
-        .margin({bottom: 10})
-
-
-      //3.任务列表
-      List({space: 10}){
-        ForEach(this.tasks, (item: Task, index) => {
-          ListItem() {
-            TaskItem({ item: item ,onTaskChange: this.handleTaskChange.bind(this)})
-          }
-          .swipeAction({end: this.DeleteButton(index)})
-        })
+          .fontColor('#fff')
       }
       .width('100%')
-      .layoutWeight(1)
-      .alignListItem(ListItemAlign.Center)
+      .backgroundColor(Color.Black)
+      .padding({top: 20, bottom: 20})
+
+
+
+      //2. 毕业时间 -- 填写毕业时间
+      Row(){
+        this.QuestionNaire('您的毕业时间？')
+        Text(`${this.year}-${this.month}-${this.day}`)
+          .textStyle()
+      }
+      .questionAreaStyle()
+      this.Divider()//分隔线
+      Row(){
+        this.DateComponent(this.year, '年')
+        this.DateComponent(this.month, '月')
+        this.DateComponent(this.day, '日')
+      }
+      .questionStyle()
+      .justifyContent(FlexAlign.SpaceEvenly)
+      .padding({top:20, bottom:20})
+
+
+
+      //3. 薪资水平 -- 填写薪资水平
+      Row(){
+        this.QuestionNaire('您的薪资水平？')
+        Text(`${this.salary}-${this.salary + 10000}`)
+          .textStyle()
+      }
+      .questionAreaStyle()
+      this.Divider()//分隔线
+      Row(){
+        Slider({
+          value: this.salary,
+          min: 5000,
+          max: 30000
+        })
+          .width('80%')
+          .onChange((value) => {
+            this.salary = parseInt(value.toFixed(0))
+          })
+      }
+      .questionStyle()
+      .justifyContent(FlexAlign.Center)
+
+
+
+      //4. 调查表--总体满意度--五星评价
+      Row(){
+        this.QuestionNaire('您的总体满意度？')
+        Text(`${this.totalScore > 10 ? '满意' : (this.totalScore >=6 ? '一般' : '差评' )}`)
+          .textStyle()
+      }
+      .questionAreaStyle()
+      this.Divider()
+      Feedback({totalScore: $totalScore})
+
+
+      //5.提交按钮
+      CustomDialogUser({year: $year, month: $month, day: $day, salary: $salary, totalScore: $totalScore})
+
 
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F1F2F3')
-  }
-
-  @Builder DeleteButton(index) {
-    Button(){
-      Image($r('app.media.ic_public_delete_filled'))
-        .fillColor(Color.White)
-        .width(25)
-    }
-    .width(40)
-    .height(40)
-    .type(ButtonType.Circle)
-    .backgroundColor(Color.Red)
-    .margin(5)
-    .onClick(() => {
-      this.tasks.splice(index, 1)
-      this.handleTaskChange()
-    })
+    .backgroundColor('#fff6f1dd')
   }
 
 
-}
 
 
-
-@Component
-struct TaskItem {
-  @ObjectLink item: Task
-  onTaskChange: () => void
-  build(){
+  //一、询问问题组件
+  @Builder QuestionNaire(question: string){
     Row(){
-      if(this.item.finished){
-        Text(this.item.name)
-          .finishedTask()
-      } else {
-        Text(this.item.name)
-          .fontSize(20)
-      }
-
-      Checkbox()
-        .select(this.item.finished)
-        .onChange(value => {
-          this.item.finished = value
-          this.onTaskChange()
-        })
+      Text(`${question}`)
+        .textStyle()
     }
-    .card()
-    .justifyContent(FlexAlign.SpaceBetween)
   }
+
+  //二、分割线组件
+  @Builder Divider(){
+    Divider()
+      .questionStyle()
+      .strokeWidth(5)
+      .margin({bottom: 15})
+  }
+
+
+  //三、日期组件
+  @Builder DateComponent(date: number, cdate: string) {
+    TextInput({
+      text: date.toString(),
+    })
+      .width('20%')
+      .fontSize(18)
+      .fontWeight(FontWeight.Bold)
+      .fontColor('#cc145579')
+      .borderRadius(0)
+      .onChange((value) => {
+        if(cdate === '年'){
+          this.year = parseInt(value)
+        } else if(cdate === '月') {
+          this.month = parseInt(value)
+        } else {
+          this.day = parseInt(value)
+        }
+      })
+    Text(`${cdate}`)
+      .fontSize(18)
+      .fontWeight(FontWeight.Bold)
+  }
+
+
 }
