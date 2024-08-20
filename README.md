@@ -34,11 +34,11 @@ videoPlay
 - 条件渲染: `if/else` 
 - 循环渲染: `ForEach`
 ### 案例效果展示
- ![抽卡首页](./VideoImg/videoPlay01.png)
- ![获得生肖卡](./VideoImg/videoPlay02.png)
- ![首页添加生肖卡](./VideoImg/videoPlay03.png)
- ![集齐生肖卡首页](./VideoImg/videoPlay04.png)
- ![获得大奖页面](./VideoImg/videoPlay05.png)
+ ![生肖抽卡首页](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/videoPlay/VideoImg/videoPlay01.png)
+ ![获得生肖卡](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/videoPlay/VideoImg/videoPlay02.png)
+ ![首页添加生肖卡](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/videoPlay/VideoImg/videoPlay03.png)
+ ![集齐生肖卡首页](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/videoPlay/VideoImg/videoPlay04.png)
+ ![获得大奖页面](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/videoPlay/VideoImg/videoPlay05.png)
 ### 案例主要负责人
  [https://github.com/Memory159](https://github.com/Memory159)
 ### 其他说明
