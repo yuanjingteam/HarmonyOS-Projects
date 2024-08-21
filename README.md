@@ -43,6 +43,10 @@ TranslateApp
 - 路由: `router`
 
 ### 案例效果展示
+![翻译首页](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/translateApp/TranslateImg/translateImg1.png)
+![翻译语种选择](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/translateApp/TranslateImg/translateImg2.png)
+![翻译效果展示](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/translateApp/TranslateImg/translateImg3.png)
+![翻译记录](https://github.com/yuanjingteam/HarmonyOS-Projects/blob/translateApp/TranslateImg/translateImg4.png)
 
 ### 案例主要负责人
 [https://github.com/Memory159](https://github.com/Memory159)
